@@ -134,7 +134,7 @@ class Ui_Dialog(object):
             #Add Temperature values to a list
             temp_list += [[current_time, temperature]]
 		
-    #read humidity from sensor and display
+    #read humidity from sensor and display. Borrowed from https://github.com/adafruit/Adafruit_Python_DHT/blob/master/examples/AdafruitDHT.py
     def display_humidity(self):
         global humid_list
         humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
