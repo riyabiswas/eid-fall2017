@@ -11,7 +11,9 @@ from PyQt5.QtWidgets import QMessageBox
 import Adafruit_DHT
 import datetime
 
+#Define class for dialog box to display historical values
 class HistoryDialog(QtWidgets.QDialog):
+    #constructor to initialize parameters
     def __init__(self, parent=None):
         super(HistoryDialog, self).__init__(parent)
 
@@ -27,7 +29,10 @@ class HistoryDialog(QtWidgets.QDialog):
         self.verticalLayout.addWidget(self.buttonBox)
 
 
+#Define class for dialog box to display alert window
 class AlarmDialog(QtWidgets.QDialog):
+
+   #constructor to set parameters
     def __init__(self, parent=None):
         super(AlarmDialog, self).__init__(parent)
 
@@ -46,12 +51,14 @@ class AlarmDialog(QtWidgets.QDialog):
         self.verticalLayout.addWidget(self.textbox)
         self.verticalLayout.addWidget(self.buttonBox)
 
+    #Function to get alarm value from user
     def save_alarm(self):
         global alarm_value
         alarm_value = float(self.textbox.text())
         print("Alarm value=",alarm_value)
         self.close()
 
+#class to define main dialog box
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -84,6 +91,8 @@ class Ui_Dialog(object):
         self.labelUnit.setFont(font)
         self.labelUnit.setWordWrap(True)
         self.labelUnit.setObjectName("labelUnit")
+
+        #conect button press events to respective functions 
         self.pushButton_temp.clicked.connect(self.display_temp)
         self.pushButton_humidity.clicked.connect(self.display_humidity)
         self.pushButton_alarm.clicked.connect(self.set_alarm)
@@ -94,7 +103,7 @@ class Ui_Dialog(object):
 
 
 
-
+    #Set texts for labelling gui items
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Temperature-Humidity Sensor"))
@@ -105,6 +114,7 @@ class Ui_Dialog(object):
         self.labelTime_hour.setText(_translate("Dialog", "Time"))
         self.labelUnit.setText("")
 		
+    #read temperature from sensor and display
     def display_temp(self):
         global temp_list
         global current_time
@@ -120,8 +130,11 @@ class Ui_Dialog(object):
             self.labelUnit.setText(t+"C")
             if temperature >= alarm_value:
                 self.show_warning()
+
+            #Add Temperature values to a list
             temp_list += [[current_time, temperature]]
 		
+    #read humidity from sensor and display
     def display_humidity(self):
         global humid_list
         humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
@@ -132,17 +145,22 @@ class Ui_Dialog(object):
         else:
             self.lcd_display.display(humidity)
             self.labelUnit.setText("%")
+
+            #Add Humidity values to a list
             humid_list += [[current_time, humidity]]
             #print("humid_list:",humid_list)
 
+    #Take alarm value from user
     def set_alarm(self):
         self.dialogTextBrowser = AlarmDialog()
         self.dialogTextBrowser.show()
 
+    #Open Warning message box for alarm
     def show_warning(self):
         msg = QtWidgets.QMessageBox()
         msg.warning(msg,"Alert!","Temperature exceeds alarm value");
 
+    #Show list values on a message browser
     def see_history(self):
         #num = 0
         last_element_temp = len(temp_list)
@@ -163,8 +181,12 @@ class Ui_Dialog(object):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
+
+    #Set GPIO pin 4 for sensor input and DHT22 as sensor
     sensor = Adafruit_DHT.DHT22
     pin = 4
+
+    #Unicode for 'degree'
     t = u"\u00b0"
     Dialog = QtWidgets.QDialog()
     ui = Ui_Dialog()
@@ -173,6 +195,8 @@ if __name__ == "__main__":
     temp_list = []
     humid_list = []
     alarm_value = 100.0
+
+    #Get current system time and date
     def update_label():
         global current_time
         current_time = str(datetime.datetime.now().strftime("%m-%d-%y %H:%M:%S"))
