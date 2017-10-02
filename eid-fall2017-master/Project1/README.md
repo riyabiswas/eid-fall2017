@@ -1,9 +1,8 @@
-This program is used to update temperature and humidity from a DHT22 sensor connected to Raspbrry Pi 3.  
-Author: Riya Biswas
+This program is used to update temperature and humidity from a DHT22 sensor connected to Raspberry Pi 3 (Raspbian Stretch OS).  
+Author: Riya Biswas  
 Course: Embedded Interface Design Fall-17  
-Libraries used: Adafruit_DHT  
-                PyQT5 QtCore, QtGui and QtWidets  
-                datetime
+Libraries used:  
+Adafruit_DHT, PyQT5 QtCore, QtGui and QtWidets, datetime  
 
 Python Version: Python v3.5  
 
